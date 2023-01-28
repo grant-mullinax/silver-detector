@@ -9,9 +9,9 @@ def calculate_price_of_recipe(recipe, location, all_prices, location_data):
 
             # guard against 0 values
             price_result = all_prices[price_key]
-            if price_result.price == 0:
+            if price_result == 0:
                 return None
-            cost += price_result.price * ingredient.count
+            cost += price_result * ingredient.count
         else:
             return None
     result_price_key = PriceKey(recipe.result, location)
@@ -22,9 +22,9 @@ def calculate_price_of_recipe(recipe, location, all_prices, location_data):
     if recipe.category in location_data:
         crafting_bonus = location_data[recipe.category]
 
-    print(recipe.result, location, all_prices[result_price_key], crafting_bonus, cost, all_prices[result_price_key].sold)
-
+    print(recipe.result, location, all_prices[result_price_key], crafting_bonus, cost)
 
     return RecipeResult(recipe,
                         location,
-                        all_prices[result_price_key].price * crafting_bonus/cost * all_prices[result_price_key].sold)
+                        (all_prices[result_price_key] * crafting_bonus) / cost,
+                        [recipe.result, location, all_prices[result_price_key], crafting_bonus, cost])

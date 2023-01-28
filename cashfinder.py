@@ -111,18 +111,16 @@ if __name__ == '__main__':
     def parse_price_data(price_data):
         prices = {}
         for price in price_data:
-            if len(price['data']) > 0:
+            if price['sell_price_min'] == 0:
+                continue
+            parsed_location = price['city']
+            if parsed_location.endswith(" Portal"):
+                parsed_location = parsed_location[:-len(" Portal")]
 
-                # to get avg daily sold
-                total_sold = 0
-                for daily_data in price['data']:
-                    total_sold += daily_data['item_count']
+            price_key = PriceKey(price['item_id'], parsed_location)
 
-                parsed_location = price['location']
-                if parsed_location.endswith(" Portal"):
-                    parsed_location = parsed_location[:-len(" Portal")]
-                prices[PriceKey(price['item_id'], parsed_location)] = \
-                    PriceResult(price['data'][0]['avg_price'], total_sold/len(price['data']))
+            if price_key not in prices or price['sell_price_min'] < prices[price_key]:
+                prices[price_key] = price['sell_price_min']
 
         return prices
 
@@ -140,8 +138,7 @@ if __name__ == '__main__':
             while len(item_string) < 1800 and len(remaining_unique_ingredients) > 0:
                 item_string += ',' + remaining_unique_ingredients.pop()
             print("request!", item_string)
-            response = session.get(f'https://www.albion-online-data.com/api/v2/stats/history/{item_string}'
-                                   f'?date={start_date}&end_date={end_date}&time-scale=24')
+            response = session.get(f'https://www.albion-online-data.com/api/v2/stats/prices/{item_string}.json')
             prices.update(parse_price_data(response.json()))
 
         return prices

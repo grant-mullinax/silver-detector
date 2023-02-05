@@ -45,13 +45,22 @@ def parse_crafting_requirements(craft_data, item_data):
         if type(craft_resource) is dict:
             craft_resource = [craft_resource]
 
+        should_break = False
         for resource in craft_resource:
-            # if 'rune' in resource['@uniquename']:
+            resource_count = int(resource['@count'])
+
+            # lazy way of filtering out rng artefact crafts
+            if resource_count == 50 and any(s in resource['@uniquename'] for s in ['RUNE', 'SOUL', 'SHARD_AVALONIAN']):
+                should_break = True
+                continue
 
             recipe.ingredients.append(
                 Ingredient(resource['@uniquename'] + find_enchantment_suffix_for_json(resource),
-                           int(resource['@count']),
+                           resource_count,
                            '@maxreturnamount' in resource))
+
+        if should_break:
+            continue
 
         recipes.append(recipe)
 

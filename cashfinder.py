@@ -7,7 +7,7 @@ from pyrate_limiter import RequestRate, Duration
 from requests_ratelimiter import LimiterAdapter
 
 from CachedLimiterSession import CachedLimiterSession
-from calculate import calculate_money, calculate_compound_strategies
+from calculate import generate_strategies, calculate_compound_strategies
 from calculation_types import Recipe, Ingredient, PriceKey
 from parsing import parse_recipes, get_all_price_data
 
@@ -49,23 +49,9 @@ if __name__ == '__main__':
 
     all_prices = get_all_price_data(unique_ingredients, session)
 
-    best_crafts = calculate_money(all_prices, all_recipes)
+    strategies = generate_strategies(all_prices, all_recipes)
 
-    max_for_item = {}
-    for result in best_crafts:
-        price_key = PriceKey(result.recipe.result, result.sale_location)
-        if (price_key not in max_for_item or result.weight > max_for_item[price_key].weight) and result.weight > 0:
-            # if any(ingredient.name == 'T6_PLANKS_LEVEL2@2' or ingredient.name == 'T6_PLANKS_LEVEL3@3' for ingredient in result.recipe.ingredients):
-            max_for_item[price_key] = result
-
-    filtered_results = [entry for key, entry in max_for_item.items()]
-
-    sorted_results = sorted(filtered_results, key=lambda x: x.weight, reverse=True)
-
-    compound_strategies = calculate_compound_strategies(list(filter(lambda x: x.weight > 0, best_crafts)))
+    compound_strategies = calculate_compound_strategies(strategies, all_prices)
 
     sorted_compound_strategies = sorted(compound_strategies, key=lambda x: x.weight, reverse=True)
-
-    for x in sorted_results[:100]:
-        print(x.calculation_data)
     print('hi')

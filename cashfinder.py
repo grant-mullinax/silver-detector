@@ -62,9 +62,9 @@ if __name__ == '__main__':
 
     sorted_results = sorted(filtered_results, key=lambda x: x.weight, reverse=True)
 
-    compound_strategies = calculate_compound_strategies(list(filter(lambda x: x.weight > 0, best_crafts)))
+    # compound_strategies = calculate_compound_strategies(list(filter(lambda x: x.weight > 0, best_crafts)))
 
-    sorted_compound_strategies = sorted(compound_strategies, key=lambda x: x.weight, reverse=True)
+    # sorted_compound_strategies = sorted(compound_strategies, key=lambda x: x.weight, reverse=True)
 
     for x in sorted_results[:100]:
         print(x.calculation_data)

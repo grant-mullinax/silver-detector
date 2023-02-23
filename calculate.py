@@ -16,8 +16,7 @@ purchase_locations = {
 }
 
 daily_crafting_bonuses = {
-    'cursestaff',
-    'mace'
+    'naturestaff',
 }
 
 # 1.18 is implicit
@@ -207,7 +206,7 @@ def calculate_price_of_strategy(recipe, purchase_location, crafting_location, sa
     if result_price_key not in all_prices:
         return None
 
-    distance_mod = 5 + location_distance_modifiers[purchase_location][crafting_location] + \
+    distance_mod = 10 + location_distance_modifiers[purchase_location][crafting_location] + \
                    location_distance_modifiers[crafting_location][sale_location]
 
     profit = ((all_prices[result_price_key] * crafting_bonus) - cost) * 0.935

@@ -51,7 +51,7 @@ if __name__ == '__main__':
 
     strategies = generate_strategies(all_prices, all_recipes)
 
-    compound_strategies = calculate_compound_strategies(strategies, all_prices)
+    compound_strategies = calculate_compound_strategies(strategies)
 
     sorted_compound_strategies = sorted(compound_strategies, key=lambda x: x.weight, reverse=True)
     print('hi')
